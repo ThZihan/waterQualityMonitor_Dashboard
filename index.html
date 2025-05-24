@@ -1,598 +1,605 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Bacteria Monitoring & Estimation System</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    :root {
-      --primary-color: #1a237e;
-      --secondary-color: #0d47a1;
-      --accent-color: #2962ff;
-      --warning-color: #ff6d00;
-      --danger-color: #d50000;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Water Quality Monitoring Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0d47a1;
+            --secondary-color: #1565c0;
+            --accent-color: #2196f3;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --success-color: #4caf50;
+        }
 
-    body {
-      background-color: #f5f6fa;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        body {
+            background-color: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    .dashboard-header {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      padding: 2rem 0;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    .bacteria-alert {
-      background: rgba(213, 0, 0, 0.1);
-      border-left: 4px solid var(--danger-color);
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 4px;
-    }
+        .water-alert {
+            background: rgba(244, 67, 54, 0.1);
+            border-left: 4px solid var(--danger-color);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
 
-    .bacteria-safe {
-      background: rgba(76, 175, 80, 0.1);
-      border-left: 4px solid #4caf50;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      border-radius: 4px;
-    }
+        .water-safe {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
 
-    .parameter-card {
-      background: white;
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      transition: transform 0.3s ease;
-    }
+        .parameter-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            height:250px;
+        }
 
-    .bacteria-card {
-      background: linear-gradient(135deg, #1a237e, #0d47a1);
-      color: white;
-    }
+        .parameter-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
 
-    .parameter-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
+        .parameter-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
 
-    .parameter-value {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin: 0.5rem 0;
-    }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
 
-    .chart-container {
-      background: white;
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    }
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
 
-    .analysis-card {
-      background: white;
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    }
+        footer {
+            background-color: rgba(44, 62, 80, 0.05);
+            padding: 2rem 0;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        }
 
-    .factor-influence {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
+        footer a {
+            text-decoration: none;
+        }
 
-    .influence-bar {
-      flex-grow: 1;
-      height: 8px;
-      background: #e0e0e0;
-      border-radius: 4px;
-      margin: 0 1rem;
-      overflow: hidden;
-    }
+        footer a:hover {
+            text-decoration: underline;
+        }
 
-    .influence-value {
-      height: 100%;
-      background: var(--accent-color);
-      transition: width 0.3s ease;
-    }
+        footer h5 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
 
-    .bacteria-level {
-      font-size: 3rem;
-      font-weight: bold;
-      text-align: center;
-      margin: 1rem 0;
-      color: white;
-    }
-
-    .bacteria-gauge {
-      position: relative;
-      width: 200px;
-      height: 100px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 100px 100px 0 0;
-      overflow: hidden;
-    }
-
-    .gauge-fill {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.3);
-      transition: height 0.3s ease;
-    }
-
-    .risk-level {
-      display: inline-block;
-      padding: 0.25rem 1rem;
-      border-radius: 15px;
-      font-weight: bold;
-      margin: 0.5rem 0;
-    }
-
-    .risk-low { background: #4caf50; color: white; }
-    .risk-medium { background: #ff9800; color: white; }
-    .risk-high { background: #f44336; color: white; }
-  </style>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        footer hr {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
 <div class="dashboard-header">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-8">
-        <h1><i class="fas fa-bacteria me-3"></i>Bacterial Growth Analysis System</h1>
-        <p class="mb-0">Advanced monitoring and prediction display platform</p>
-      </div>
-      <div class="col-md-4 text-end">
-        <img src="https://cdn-icons-gif.flaticon.com/11651/11651661.gif" style="width: 60px" alt="Bacteria monitoring" class="img-fluid rounded-circle">
-      </div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1><i class="fas fa-water me-3"></i>River Water Quality Monitoring Dashboard</h1>
+                <p class="mb-0">Advanced real-time water quality monitoring and analysis platform</p>
+            </div>
+            <!--            <div class="col-md-4 text-end">-->
+            <!--                <img src="/api/placeholder/60/60" alt="River monitoring" class="img-fluid rounded-circle">-->
+            <!--            </div>-->
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="container">
-  <!-- Main Bacteria Card -->
-  <div class="row">
-    <div class="col-12">
-      <div class="parameter-card bacteria-card">
-        <div class="row align-items-center">
-          <div class="col-md-4 text-center">
-            <i class="fas fa-bacteria parameter-icon"></i>
-            <h3>Estimated Bacteria Level</h3>
-            <div class="bacteria-level" id="bacteria-level">--%</div>
-          </div>
-          <div class="col-md-4">
-            <div class="bacteria-gauge">
-              <div class="gauge-fill" id="bacteria-gauge"></div>
+    <!-- Parameter Cards Row 1 -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-temperature-high parameter-icon text-danger"></i>
+                <h3>Temperature</h3>
+                <div class="parameter-value" id="temperature-value">--°C</div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <h4>Risk Level</h4>
-            <div id="risk-indicator"></div>
-            <div id="risk-description"></div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Parameter Cards -->
-  <div class="row">
-    <div class="col-md-3">
-      <div class="parameter-card">
-        <i class="fas fa-temperature-high parameter-icon text-danger"></i>
-        <h3>Temperature</h3>
-        <div class="parameter-value" id="temperature-value">--°C</div>
-        <div id="temp-influence"></div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="parameter-card">
-        <i class="fas fa-vial parameter-icon text-primary"></i>
-        <h3>pH Level</h3>
-        <div class="parameter-value" id="ph-value">--</div>
-        <div id="ph-influence"></div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="parameter-card">
-        <i class="fas fa-water parameter-icon text-info"></i>
-        <h3>Turbidity</h3>
-        <div class="parameter-value" id="turbidity-value">-- NTU</div>
-        <div id="turbidity-influence"></div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="parameter-card">
-        <i class="fas fa-flask parameter-icon text-warning"></i>
-        <h3>TDS</h3>
-        <div class="parameter-value" id="tds-value">-- PPM</div>
-        <div id="tds-influence"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bacteria Analysis -->
-  <div class="row">
-    <div class="col-md-12">
-      <div class="analysis-card">
-        <h2><i class="fas fa-microscope me-2"></i>Bacterial Growth Analysis</h2>
-        <div id="bacteriaAnalysis"></div>
-      </div>
-    </div>
-  </div>
-
-<h2 style="text-align: center;"> Graphical Analysis </h2>
-  <!-- Chart Divs -->
-  <div class="row">
-    <div class="col-12">
-      <div class="chart-container">
-        <div id="BacteriaPercentageChart"></div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="chart-container">
-        <div id="temperatureChart"></div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="chart-container">
-        <div id="phChart"></div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="chart-container">
-        <div id="turbidityChart"></div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="chart-container">
-        <div id="TDSChart"></div>
-      </div>
-    </div>
-  </div>
-</div>>
-
-  <script>
-  // Enhanced bacteria estimation algorithm
-  function estimateBacteriaGrowth(temperature, ph, turbidity, tds) {
-    // Weight factors for each parameter
-    const weights = {
-      temperature: 0.3,
-      ph: 0.25,
-      turbidity: 0.2,
-      tds: 0.25
-    };
-
-    // Temperature influence (20-40°C optimal)
-    let tempFactor = 0;
-    if (temperature >= 20 && temperature <= 40) {
-      tempFactor = 1 - Math.abs((temperature - 30) / 20);
-    } else {
-      tempFactor = Math.max(0, 1 - Math.abs(temperature - 30) / 30);
-    }
-
-    // pH influence (6.5-7.5 optimal)
-    let phFactor = 0;
-    if (ph >= 6.5 && ph <= 7.5) {
-      phFactor = 1 - Math.abs((ph - 7) / 1);
-    } else {
-      phFactor = Math.max(0, 1 - Math.abs(ph - 7) / 2);
-    }
-
-    // Turbidity influence (>5 NTU favorable)
-    let turbidityFactor = Math.min(1, turbidity / 10);
-
-    // TDS influence (200-1000 PPM optimal)
-    let tdsFactor = 0;
-    if (tds >= 200 && tds <= 1000) {
-      tdsFactor = 1 - Math.abs((tds - 600) / 800);
-    } else {
-      tdsFactor = Math.max(0, 1 - Math.abs(tds - 600) / 1000);
-    }
-
-    // Calculate influence percentages
-    const influences = {
-      temperature: tempFactor * 100,
-      ph: phFactor * 100,
-      turbidity: turbidityFactor * 100,
-      tds: tdsFactor * 100
-    };
-
-    // Calculate weighted bacteria growth potential
-    const bacteriaPercentage = (
-            tempFactor * weights.temperature +
-            phFactor * weights.ph +
-            turbidityFactor * weights.turbidity +
-            tdsFactor * weights.tds
-    ) * 100;
-
-    return {
-      percentage: Math.round(bacteriaPercentage * 100) / 100,
-      influences: influences
-    };
-  }
-
-  function updateInfluenceBar(elementId, value, label) {
-    const html = `
-      <div class="factor-influence">
-        <span>${label}</span>
-        <div class="influence-bar">
-          <div class="influence-value" style="width: ${value}%"></div>
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-water parameter-icon text-info"></i>
+                <h3>Turbidity</h3>
+                <div class="parameter-value" id="turbidity-value">-- NTU</div>
+            </div>
         </div>
-        <span>${Math.round(value)}%</span>
-      </div>
-    `;
-    document.getElementById(elementId).innerHTML = html;
-  }
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-flask parameter-icon text-warning"></i>
+                <h3>TDS</h3>
+                <div class="parameter-value" id="tds-value">-- PPM</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-vial parameter-icon text-success"></i>
+                <h3>pH Level</h3>
+                <div class="parameter-value" id="ph-value">--</div>
+            </div>
+        </div>
+    </div>
 
-  function getRiskLevel(percentage) {
-    if (percentage < 30) return { level: 'Low', class: 'risk-low', description: 'Conditions are not favorable for bacterial growth.' };
-    if (percentage < 60) return { level: 'Medium', class: 'risk-medium', description: 'Moderate risk of bacterial growth.' };
-    return { level: 'High', class: 'risk-high', description: 'High risk of bacterial proliferation!' };
-  }
+    <!-- Parameter Cards Row 2 -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-wind parameter-icon text-primary"></i>
+                <h3>Dissolved Oxygen</h3>
+                <div class="parameter-value" id="do-value">-- mg/L</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-bolt parameter-icon text-success"></i>
+                <h3>Electrical Conductivity</h3>
+                <div class="parameter-value" id="ec-value">-- μS/cm</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-exchange-alt parameter-icon text-warning"></i>
+                <h3>ORP</h3>
+                <div class="parameter-value" id="orp-value">-- mV</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="parameter-card">
+                <i class="fas fa-ruler-vertical parameter-icon text-info"></i>
+                <h3>Water Depth</h3>
+                <div class="parameter-value" id="depth-value">-- m</div>
+            </div>
+        </div>
+    </div>
 
-  async function fetchData() {
-    const response = await fetch('https://api.thingspeak.com/channels/2725180/feeds.json?results=60');
-    const data = await response.json();
-    return data;
-  }
+    <!-- Water Quality Analysis -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="analysis-card">
+                <h2><i class="fas fa-chart-line me-2"></i>Water Quality Analysis</h2>
+                <div id="waterQualityAnalysis"></div>
+            </div>
+        </div>
+    </div>
 
-  function displayLatestData(latest) {
-    // Parse values
-    const temperature = parseFloat(latest.field1);
-    const ph = parseFloat(latest.field2);
-    const turbidity = parseFloat(latest.field3);
-    const tds = parseFloat(latest.field4);
+    <h2 style="text-align: center;">Graphical Analysis</h2>
+    <!-- Chart Row 1 -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-container">
+                <div id="temperatureChart"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-container">
+                <div id="turbidityChart"></div>
+            </div>
+        </div>
+    </div>
 
-    // Calculate bacteria estimation
-    const bacteriaEstimation = estimateBacteriaGrowth(temperature, ph, turbidity, tds);
-    const riskInfo = getRiskLevel(bacteriaEstimation.percentage);
+    <!-- Chart Row 2 -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-container">
+                <div id="TDSChart"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-container">
+                <div id="DOChart"></div>
+            </div>
+        </div>
+    </div>
 
-    // Update display values
-    document.getElementById('temperature-value').textContent = `${temperature}°C`;
-    document.getElementById('ph-value').textContent = ph;
-    document.getElementById('turbidity-value').textContent = `${turbidity} NTU`;
-    document.getElementById('tds-value').textContent = `${tds} PPM`;
-    document.getElementById('bacteria-level').textContent = `${bacteriaEstimation.percentage}%`;
+    <!-- Chart Row 3 -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="chart-container">
+                <div id="ECChart"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <div id="ORPChart"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <div id="depthChart"></div>
+            </div>
+        </div>
+    </div>
 
-    // Update gauge
-    document.getElementById('bacteria-gauge').style.height = `${bacteriaEstimation.percentage}%`;
+    <!-- Chart Row 4 (For pH) -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-container">
+                <div id="pHChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    // Update risk indicator
-    document.getElementById('risk-indicator').innerHTML = `
-      <span class="risk-level ${riskInfo.class}">${riskInfo.level} Risk</span>
-    `;
-    document.getElementById('risk-description').textContent = riskInfo.description;
+<script>
+    // Predefined dummy data arrays
+    const dummyData = {
+        timestamps: Array.from({ length: 60 }, (_, i) => {
+            return new Date(Date.now() - (59 - i) * 300000).toISOString();
+        }),
+        temperature: [
+            21.8, 21.7, 21.7, 21.7, 21.6, 21.6, 21.6, 21.5, 21.5, 21.6,
+            21.6, 21.4, 21.6, 21.7, 21.5, 21.6, 21.7, 21.7, 21.8, 21.8,
+            21.8, 21.8, 21.7, 21.7, 21.6, 21.7, 21.7, 21.7, 21.6, 21.5,
+            21.6, 21.6, 21.6, 21.7, 21.5, 21.6, 21.7, 21.6, 21.8, 21.5,
+            21.7, 21.7, 21.5, 21.3, 21.4, 21.4, 21.5, 21.5, 21.6, 21.3,
+            21.4, 21.5, 21.5, 21.5, 21.6, 21.4, 21.5, 21.5, 21.5, 21.4
+        ],
+        turbidity: [
+            12.0, 11.3, 10.6, 11.9, 10.5, 11.7, 11.6, 10.7, 10.4, 11.9,
+            11.0, 10.3, 11.4, 10.8, 11.2, 11.5, 10.9, 10.1, 11.6, 10.2,
+            11.8, 11.1, 10.5, 11.3, 10.7, 10.9, 11.4, 10.8, 11.0, 11.2,
+            10.6, 11.8, 10.9, 11.5, 10.3, 11.6, 10.7, 11.1, 10.4, 11.0,
+            10.2, 11.7, 10.5, 11.3, 10.8, 11.4, 10.6, 11.9, 10.7, 11.0,
+            10.3, 11.5, 10.9, 11.2, 10.6, 11.1, 10.4, 11.8, 10.7, 10.7
+        ],
+        tds: [
+            1040, 985, 961, 936, 952, 1070, 996, 1001, 1006, 924,
+            948, 962, 1036, 1033, 913, 1049, 1097, 945, 970, 953,
+            911, 965, 1008, 1022, 937, 984, 1015, 964, 1088, 977,
+            992, 951, 1029, 1061, 909, 993, 1011, 958, 1004, 1075,
+            948, 986, 1007, 1042, 972, 959, 1031, 995, 961, 1002,
+            1083, 927, 982, 1019, 968, 1055, 990, 1003, 943, 950
+        ],
+        ph: [
+            7.5, 7.0, 7.4, 6.8, 7.0, 7.5, 6.7, 7.0, 7.4, 6.7,
+            7.0, 6.9, 7.2, 6.8, 6.9, 7.1, 7.3, 6.6, 7.5, 6.9,
+            7.2, 6.8, 7.1, 6.5, 7.6, 6.8, 6.6, 6.8, 7.3, 6.7,
+            7.4, 6.7, 6.8, 6.6, 7.3, 6.9, 6.7, 7.2, 6.8, 7.1,
+            6.9, 7.0, 6.7, 7.3, 6.8, 7.1, 6.6, 6.9, 7.2, 6.5,
+            7.6, 6.7, 7.0, 6.9, 7.4, 6.8, 7.1, 6.6, 7.2, 7.23
+        ],
 
-    // Update influence bars
-    updateInfluenceBar('temp-influence', bacteriaEstimation.influences.temperature, 'Growth Impact');
-    updateInfluenceBar('ph-influence', bacteriaEstimation.influences.ph, 'Growth Impact');
-    updateInfluenceBar('turbidity-influence', bacteriaEstimation.influences.turbidity, 'Growth Impact');
-    updateInfluenceBar('tds-influence', bacteriaEstimation.influences.tds, 'Growth Impact');
+        dissolvedOxygen: [
+            2.4, 2.3, 2.6, 2.1, 2.7, 2.9, 2.6, 2.1, 2.5, 2.8,
+            2.1, 2.9, 2.2, 2.5, 2.3, 2.7, 2.2, 2.6, 2.8, 2.4,
+            2.0, 2.6, 2.3, 2.7, 2.4, 2.1, 2.5, 2.8, 2.2, 2.4,
+            2.7, 2.1, 2.5, 2.9, 2.3, 2.6, 2.4, 2.2, 2.7, 2.5,
+            2.3, 2.6, 2.4, 2.8, 2.5, 2.2, 2.6, 2.3, 2.4, 2.7,
+            2.1, 2.5, 2.6, 2.3, 2.7, 2.2, 2.5, 2.4, 2.0, 2.1
+        ],
+        electricalConductivity: [
+            323, 387, 357, 379, 396, 380, 314, 401, 322, 379,
+            371, 325, 342, 406, 394, 374, 330, 316, 328, 371,
+            388, 399, 397, 378, 362, 376, 335, 389, 375, 330,
+            341, 368, 399, 380, 334, 336, 318, 387, 336, 388,
+            373, 374, 347, 355, 344, 382, 345, 365, 363, 402,
+            362, 383, 310, 340, 402, 310, 324, 320, 331, 340
+        ],
+        orp: [
+            1694, 1661, 1695, 1697, 1657, 1658, 1655, 1688, 1697, 1679,
+            1682, 1690, 1668, 1693, 1655, 1667, 1681, 1699, 1682, 1646,
+            1663, 1675, 1659, 1685, 1691, 1672, 1665, 1696, 1687, 1654,
+            1678, 1692, 1660, 1689, 1658, 1674, 1698, 1662, 1686, 1671,
+            1656, 1690, 1677, 1664, 1694, 1679, 1657, 1683, 1670, 1661,
+            1695, 1678, 1669, 1684, 1653, 1676, 1699, 1663, 1680, 1672
+        ],
+        depth: [
+            2.50, 2.55, 2.60, 2.65, 2.70, 2.75, 2.80, 2.85, 2.90, 2.95,
+            3.00, 3.05, 3.10, 3.15, 3.12, 3.14, 3.18, 3.25, 3.20, 3.15,
+            3.10, 3.15, 3.00, 3.15, 3.12, 3.05, 2.90, 2.95, 2.91, 2.95,
+            2.92, 2.95, 2.84, 2.85, 2.80, 2.83, 2.82, 2.80, 2.75, 2.65,
+            2.62, 2.60, 2.60, 2.63, 2.60, 2.65, 2.63, 2.65, 2.70, 2.72,
+            2.72, 2.75, 2.80, 2.82, 2.80, 2.75, 2.73, 2.75, 2.70, 2.75
+        ]
+    };
 
-    // Update analysis
-    // Update analysis
-    const analysisHtml = `
+    async function fetchData() {
+        // Use predefined dummy data instead of generating it
+        const data = {
+            feeds: Array.from({ length: 60 }, (_, i) => {
+                return {
+                    created_at: dummyData.timestamps[i],
+                    field1: dummyData.temperature[i].toFixed(1),         // Temperature
+                    field2: dummyData.turbidity[i].toFixed(1),           // Turbidity
+                    field3: dummyData.tds[i].toFixed(0),                 // TDS
+                    field4: dummyData.dissolvedOxygen[i].toFixed(1),     // Dissolved Oxygen
+                    field5: dummyData.electricalConductivity[i].toFixed(0), // Electrical Conductivity
+                    field6: dummyData.orp[i].toFixed(0),                 // ORP
+                    field7: dummyData.depth[i].toFixed(2),               // Water Depth
+                    field8: dummyData.ph[i].toFixed(1)                   // pH Level
+                };
+            })
+        };
+
+        return data;
+    }
+
+    function displayLatestData(latest) {
+        // Parse values
+        const temperature = parseFloat(latest.field1);
+        const turbidity = parseFloat(latest.field2);
+        const tds = parseFloat(latest.field3);
+        const do_level = parseFloat(latest.field4);
+        const ec = parseFloat(latest.field5);
+        const orp = parseFloat(latest.field6);
+        const depth = parseFloat(latest.field7);
+        const ph = parseFloat(latest.field8);
+
+        // Update display values
+        document.getElementById('temperature-value').textContent = `${temperature}°C`;
+        document.getElementById('turbidity-value').textContent = `${turbidity} NTU`;
+        document.getElementById('tds-value').textContent = `${tds} PPM`;
+        document.getElementById('do-value').textContent = `${do_level} mg/L`;
+        document.getElementById('ec-value').textContent = `${ec} μS/cm`;
+        document.getElementById('orp-value').textContent = `${orp} mV`;
+        document.getElementById('depth-value').textContent = `${depth} m`;
+        document.getElementById('ph-value').textContent = `${ph}`;
+
+        // Update analysis section
+        const analysisHtml = `
       <div class="row">
         <div class="col-md-4">
-          <img src="https://cdnl.iconscout.com/lottie/premium/thumb/microscope-and-bacteria-animation-download-in-lottie-json-gif-static-svg-file-formats--lab-accessory-equipment-biology-science-pack-technology-animations-4573736.gif" alt="Bacteria analysis" class="img-fluid rounded mb-3">
+          <img src="https://cdnl.iconscout.com/lottie/premium/thumb/microscope-and-bacteria-animation-download-in-lottie-json-gif-static-svg-file-formats--lab-accessory-equipment-biology-science-pack-technology-animations-4573736.gif" alt="River water analysis" class="img-fluid rounded mb-3">
         </div>
         <div class="col-md-8">
-          <div class="${bacteriaEstimation.percentage >= 60 ? 'bacteria-alert' : 'bacteria-safe'}">
-            <h4>Current Status</h4>
-            <p><strong>Bacterial Growth Potential: ${bacteriaEstimation.percentage}%</strong></p>
-            <p>${riskInfo.description}</p>
-          </div>
           <h4>Parameter Analysis</h4>
           <ul>
             <li>Temperature (${temperature}°C): ${
-            temperature >= 20 && temperature <= 40
-                    ? 'Optimal for bacterial growth'
-                    : 'Outside optimal range'
-    }</li>
-            <li>pH Level (${ph}): ${
-            ph >= 6.5 && ph <= 7.5
-                    ? 'Optimal for bacterial growth'
-                    : 'Outside optimal range'
-    }</li>
+            temperature >= 15 && temperature <= 30
+                ? 'Optimal for aquatic life'
+                : 'Outside optimal range'
+        }</li>
             <li>Turbidity (${turbidity} NTU): ${
-            turbidity >= 5
-                    ? 'Favorable for bacterial growth'
-                    : 'Below favorable threshold'
-    }</li>
+            turbidity < 10
+                ? 'Good clarity, low turbidity'
+                : 'Elevated turbidity, reduced water clarity'
+        }</li>
             <li>TDS (${tds} PPM): ${
-            tds >= 200 && tds <= 1000
-                    ? 'Optimal for bacterial growth'
-                    : 'Outside optimal range'
-    }</li>
+            tds < 500
+                ? 'Low dissolved solids, good water quality'
+                : 'Elevated dissolved solids'
+        }</li>
+            <li>pH (${ph}): ${
+            ph >= 6.5 && ph <= 8.5
+                ? 'Neutral pH, ideal for most aquatic life'
+                : ph < 6.5 ? 'Acidic conditions, may stress aquatic organisms' : 'Alkaline conditions, potential stress for aquatic life'
+        }</li>
+            <li>Dissolved Oxygen (${do_level} mg/L): ${
+            do_level >= 6
+                ? 'Good oxygen levels for aquatic life'
+                : 'Low oxygen levels, potential stress for aquatic organisms'
+        }</li>
+            <li>Electrical Conductivity (${ec} μS/cm): ${
+            ec < 800
+                ? 'Normal conductivity levels'
+                : 'Elevated conductivity, indicating higher dissolved ion content'
+        }</li>
+            <li>ORP (${orp} mV): ${
+            orp >= 300 && orp <= 500
+                ? 'Good oxidation-reduction potential'
+                : 'Suboptimal redox potential'
+        }</li>
+            <li>Water Depth (${depth} m): Normal range for observation</li>
           </ul>
         </div>
       </div>
     `;
 
-    document.getElementById('bacteriaAnalysis').innerHTML = analysisHtml;
-  }
+        document.getElementById('waterQualityAnalysis').innerHTML = analysisHtml;
+    }
 
-  function plotChart(fieldData, title, chartDiv, yAxisLabel) {
-    const timestamps = fieldData.map(feed => feed.created_at);
-    const values = fieldData.map(feed => parseFloat(feed.value));
+    function plotChart(fieldData, title, chartDiv, yAxisLabel, lineColor = '#3498db') {
+        const timestamps = fieldData.map(feed => feed.created_at);
+        const values = fieldData.map(feed => parseFloat(feed.value));
 
-    const layout = {
-      title: {
-        text: title,
-        font: { size: 20, color: '#2c3e50' }
-      },
-      xaxis: {
-        title: 'Timestamp',
-        tickangle: 45,
-        gridcolor: '#f0f0f0'
-      },
-      yaxis: {
-        title: yAxisLabel,
-        gridcolor: '#f0f0f0'
-      },
-      margin: { t: 50, l: 50, r: 20, b: 80 },
-      plot_bgcolor: '#ffffff',
-      paper_bgcolor: '#ffffff',
-    };
+        const layout = {
+            title: {
+                text: title,
+                font: { size: 20, color: '#2c3e50' }
+            },
+            xaxis: {
+                title: 'Timestamp',
+                tickangle: 45,
+                gridcolor: '#f0f0f0'
+            },
+            yaxis: {
+                title: yAxisLabel,
+                gridcolor: '#f0f0f0'
+            },
+            margin: { t: 50, l: 50, r: 20, b: 80 },
+            plot_bgcolor: '#ffffff',
+            paper_bgcolor: '#ffffff',
+        };
 
-    const trace = {
-      x: timestamps,
-      y: values,
-      type: 'scatter',
-      mode: 'lines+markers',
-      line: {
-        color: '#3498db',
-        width: 3,
-        shape: 'spline'
-      },
-      marker: {
-        color: '#2980b9',
-        size: 8
-      }
-    };
+        const trace = {
+            x: timestamps,
+            y: values,
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: {
+                color: lineColor,
+                width: 3,
+                shape: 'spline'
+            },
+            marker: {
+                color: lineColor,
+                size: 8
+            }
+        };
 
-    Plotly.newPlot(chartDiv, [trace], layout, { responsive: true });
-  }
+        Plotly.newPlot(chartDiv, [trace], layout, { responsive: true });
+    }
 
-  async function init() {
-    const data = await fetchData();
-    const latest = data.feeds[data.feeds.length - 1];
-    displayLatestData(latest);
+    async function init() {
+        const data = await fetchData();
+        const latest = data.feeds[data.feeds.length - 1];
+        displayLatestData(latest);
 
-    const recentData = data.feeds.slice(-20);
+        const recentData = data.feeds.slice(-20);
 
-    // Plot charts for bacteria and other parameters
-    plotChart(
-            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field5) })),
-            'Bacteria Growth Trends',
-            'BacteriaPercentageChart',
-            'Bacteria Percentage (%)'
-    );
-
-    plotChart(
+        // Plot charts for all parameters
+        plotChart(
             recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field1) })),
             'Temperature Trends',
             'temperatureChart',
-            'Temperature (°C)'
-    );
+            'Temperature (°C)',
+            '#f44336'
+        );
 
-    plotChart(
+        plotChart(
             recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field2) })),
-            'pH Level Trends',
-            'phChart',
-            'pH Level'
-    );
-
-    plotChart(
-            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field3) })),
             'Turbidity Trends',
             'turbidityChart',
-            'Turbidity (NTU)'
-    );
+            'Turbidity (NTU)',
+            '#03a9f4'
+        );
 
-    plotChart(
-            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field4) })),
+        plotChart(
+            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field3) })),
             'TDS Trends',
             'TDSChart',
-            'TDS (PPM)'
-    );
-  }
+            'TDS (PPM)',
+            '#ff9800'
+        );
 
-  init();
-  setInterval(init, 15000); // Refresh data every 15 seconds
+        plotChart(
+            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field4) })),
+            'Dissolved Oxygen Trends',
+            'DOChart',
+            'DO (mg/L)',
+            '#4caf50'
+        );
+
+        plotChart(
+            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field5) })),
+            'Electrical Conductivity Trends',
+            'ECChart',
+            'EC (μS/cm)',
+            '#9c27b0'
+        );
+
+        plotChart(
+            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field6) })),
+            'ORP Trends',
+            'ORPChart',
+            'ORP (mV)',
+            '#795548'
+        );
+
+        plotChart(
+            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field7) })),
+            'Water Depth Trends',
+            'depthChart',
+            'Depth (m)',
+            '#607d8b'
+        );
+
+        plotChart(
+            recentData.map(f => ({ created_at: f.created_at, value: parseFloat(f.field8) })),
+            'pH Level Trends',
+            'pHChart',
+            'pH',
+            '#e91e63'
+        );
+    }
+
+    init();
+    setInterval(init, 15000); // Refresh data every 15 seconds
 </script>
+
 <!-- Footer -->
 <footer class="mt-5">
-  <div class="container">
-    <div class="row">
-      <!-- About Section -->
-      <div class="col-md-4">
-        <h5 class="text-primary">About</h5>
-        <p>
-          The Water Quality Monitoring Dashboard provides <br> real-time insights into key water parameters, <br> enabling better decision-making for health and safety.
-        </p>
-      </div>
+    <div class="container">
+        <div class="row">
+            <!-- About Section -->
+            <div class="col-md-4">
+                <h5 class="text-primary">About</h5>
+                <p>
+                    The River Water Quality Monitoring System provides real-time insights into key water parameters,
+                    enabling better decision-making for environmental protection and water resource management.
+                </p>
+            </div>
 
-      <!-- Quick Links -->
-      <div class="col-md-4">
-        <h5 class="text-primary">Quick Links</h5>
-        <ul class="list-unstyled">
-          <li><a href="#temperatureChart" class="text-dark">Temperature Trends</a></li>
-          <li><a href="#phChart" class="text-dark">pH Level Trends</a></li>
-          <li><a href="#turbidityChart" class="text-dark">Turbidity Trends</a></li>
-          <li><a href="#TDSChart" class="text-dark">TDS Trends</a></li>
-          <li><a href="#BacteriaPercentageChart" class="text-dark">Bacteria Growth Trends</a></li>
-        </ul>
-      </div>
+            <!-- Quick Links -->
+            <div class="col-md-4">
+                <h5 class="text-primary">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#temperatureChart" class="text-dark">Temperature Trends</a></li>
+                    <li><a href="#DOChart" class="text-dark">Dissolved Oxygen Trends</a></li>
+                    <li><a href="#turbidityChart" class="text-dark">Turbidity Trends</a></li>
+                    <li><a href="#ECChart" class="text-dark">Conductivity Trends</a></li>
+                    <li><a href="#TDSChart" class="text-dark">TDS Trends</a></li>
+                    <li><a href="#pHChart" class="text-dark">pH Trends</a></li>
+                </ul>
+            </div>
 
-      <!-- Contact Info -->
-      <div class="col-md-4">
-        <h5 class="text-primary">Contact</h5>
-        <p>
-          <i class="fas fa-envelope me-2"></i>support@waterqualitymonitor.com
-        </p>
-        <p>
-          <i class="fas fa-phone me-2"></i>+8801xxxxxxx
-        </p>
-        <p>
-          <i class="fas fa-map-marker-alt me-2"></i>Independent University, Bangladesh
-        </p>
-      </div>
+            <!-- Contact Info -->
+            <div class="col-md-4">
+                <h5 class="text-primary">Contact</h5>
+                <p>
+                    <i class="fas fa-envelope me-2"></i>info@iub.edu.bd
+                </p>
+                <p>
+                    <i class="fas fa-phone me-2"></i> +8809612-939393
+
+
+                </p>
+                <p>
+                    <i class="fas fa-map-marker-alt me-2"></i>Independent University, Bangladesh
+                </p>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Bottom Footer -->
+        <div class="text-center">
+            <p class="mb-0">
+                &copy; 2024-2025 River Water Quality Monitoring System. All rights reserved. |
+                <a href="/privacy-policy" class="text-primary">Privacy Policy</a> |
+                <a href="/terms-of-service" class="text-primary">Terms of Service</a>
+            </p>
+        </div>
     </div>
-
-    <hr class="my-4">
-
-    <!-- Bottom Footer -->
-    <div class="text-center">
-      <p class="mb-0">
-        &copy; 2024 Water Bacteria Analysis Dashboard. All rights reserved. |
-        <a href="/privacy-policy" class="text-primary">Privacy Policy</a> |
-        <a href="/terms-of-service" class="text-primary">Terms of Service</a>
-      </p>
-    </div>
-  </div>
 </footer>
-
-<style>
-  footer {
-    background-color: rgba(44, 62, 80, 0.05); /* Light shadow-like effect */
-    padding: 2rem 0;
-    font-size: 0.9rem;
-    color: #2c3e50;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
-  }
-
-  footer a {
-    text-decoration: none;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-
-  footer h5 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-  }
-
-  footer hr {
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-</style>
 </body>
 </html>
